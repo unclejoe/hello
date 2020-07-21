@@ -2,6 +2,7 @@
 import Foundation
 import Fluent
 
+
 struct BlogMigration_v1_0_0: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
         database.eventLoop.flatten(
@@ -26,7 +27,15 @@ struct BlogMigration_v1_0_0: Migration {
                 .unique(on: BlogPostModel.FieldKeys.slug)
                 .create()
             ]
-        )
+        ).flatMap {
+            let defaultCategory = BlogCategoryModel(title: "Uncategorized")
+            let islandsCategory = BlogCategoryModel(title: "Islands")
+            return [defaultCategory, islandsCategory].create(on: database)
+                    .flatMap {
+                        let posts = self.uncategorizedPosts(for: defaultCategory) + self.islandPosts(for: islandsCategory)
+                        return posts.create(on: database)
+                    }
+        }
     }
 
     func revert(on database: Database) -> EventLoopFuture<Void> {
