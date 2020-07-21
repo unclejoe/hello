@@ -26,7 +26,7 @@ struct BlogFrontendController {
                     PostWithCategory(category: $0.category.viewContext, post: $0.viewContext) }
                 .flatMap {
                     let context = Context(title: "myPage - Blog", items: $0)
-                    return req.view.render("blog", context) }
+                    return req.view.render("Blog/Frontend/blog", context) }
     }
     
     func postView(req: Request) throws -> EventLoopFuture<Response> {
@@ -45,6 +45,6 @@ struct BlogFrontendController {
                 }
                 let item = PostWithCategory(category: post.category.viewContext, post: post.viewContext)
                 let context = Context(title: "myPage - \("post.title")", item: item)
-                return req.view.render("post", context).encodeResponse(for: req) }
+                return req.view.render("Blog/Frontend/post", context).encodeResponse(for: req) }
     }
 }

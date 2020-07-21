@@ -9,15 +9,19 @@ import Vapor
 struct FrontendController {
 
      func homeView(req: Request) throws -> EventLoopFuture<View> {
-        struct Context: Encodable {
-            let title: String
-            let header: String
-            let message: String
-        }
+         var email: String?
+         if let user = req.auth.get(UserModel.self) {
+             email = user.email
+         }
 
-        let context = Context(title: "Unclejoe's Blog - 首页",
-        header: "大家好,",
-        message: "欢迎大家访问我的博客!")
-        return req.view.render("home", context)
-    }
+         struct Context: Encodable {
+             let title: String
+             let header: String
+             let message: String
+             let email: String?
+         }
+
+         let context = Context(title: "myPage - Home", header: "Hi there,", message: "welcome to my awesome page!", email: email)
+         return req.view.render("Frontend/home", context)
+     }
 }

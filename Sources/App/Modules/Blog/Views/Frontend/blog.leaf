@@ -1,5 +1,5 @@
 
-#extend("index"):
+#extend("Frontend/index"):
     #export("body"):
     <section id="blog" class="wrapper">
         <h2>Blog</h2>
